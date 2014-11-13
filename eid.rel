@@ -1,0 +1,10 @@
+{release,
+	{"eid_rel", "EID-1"},
+	{erts, "5.9.1"},
+	[
+	{kernel, "2.15.1"},
+	{stdlib, "1.18.1"},
+	{inets, "5.9"},
+	{eid, "1.0"}
+	]
+}.
