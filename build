@@ -1,0 +1,34 @@
+#!/usr/bin/env escript
+%% -*- erlang -*-
+
+main([]) ->
+	main(["."]);
+main([Arg1]) when is_list(Arg1) ->
+	try
+		Path = Arg1 ++ "/",
+		io:format("[INFO] ensure dir ~p~n", [Path]),
+		ok = filelib:ensure_dir(Path),
+		set_cwd("eid"),
+		io:format("[INFO] make all~n"),
+		up_to_date = make:all(),
+		set_cwd("../release"),
+		io:format("[INFO] parse eid.config~n"),
+		{ok, Conf} = file:consult("eid.config"),
+		{ok, Spec} = reltool:get_target_spec(Conf),
+		set_cwd(".."),
+		io:format("[INFO] install erl~n"),
+		ok = reltool:eval_target_spec(Spec, code:root_dir(), Path),
+		io:format("[INFO] completed~n")
+	catch
+		_ : _ -> usage()
+	end;
+main(_) ->
+	usage().
+
+set_cwd(Path) ->
+	io:format("[INFO] cd ~p~n", [Path]),
+	file:set_cwd(Path).
+
+usage() ->
+	io:format("[USAGE] build [path]~n"),
+	halt(1).
