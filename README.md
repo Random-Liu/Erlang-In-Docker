@@ -37,18 +37,36 @@ Install
 Docker Remote API should be enabled by following steps:<br />
 1. add `DOCKER_OPTS="-H tcp://0.0.0.0:4243"` in `/etc/default/docker.io` or `/etc/default/docker`.<br />
 2. Restart docker daemon by `sudo service docker restart`.<br />
->PS: `4243` is the default port used by docker HTTP API. It can also be set to some other value such as `4321`, but eid should be configured the same docker port value by adding `-kernel docker_dameon_port 4321` when starting VM.
+>PS: `4243` is the default port used by docker HTTP API. It can also be set to some other value such as `4321`, but eid should be configured the same docker port value by adding `-kernel docker_dameon_port 4321` when starting Erlang VM.
 
-### Erlang-In-Docker Installation and Configuration
+### Erlang-In-Docker Installation, Configuration and Usage
 #### Erlang-In-Docker Installation
+>You must ensure you have an erlang environment on your computer.
 
+You can compile and install Erlang-In-Docker with the simple command `./build %target_path%`, for example:
+```Bash
+./build /usr/lib/erlang
+```
+After the installation, a complete Erlang environment with `eid` started automatically is installed to `%target_path%`.
 
-安装配置
-docker配置
-eid安装配置
+#### Erlang-In-Docker Usage
+1. You should install Erlang-In-Docker in your docker image, and use new erlang environment installed by Erlang-In-Docker instead of the old one.<br />
+2. When starting docker, you should add argument `-p 12345` to export and publish the port used by Erlang node.<br />
+3. When starting Erlang node, you should add argument `-proto_dist eid_tcp` to enable `eid_tcp_dist` instead of `inet_tcp_dist`.
 
-演示
+>PS: `12345` is the default port used by Erlang node. It can also be set to some other value suche as `1234`, but eid should be configured the same erlang port value by adding `-kernel erlang_port 1234` when starting Erlang VM.
 
-docker image
+For example, the command should be like this:
+```Bash
+ sudo docker run -i -t -p 12345 %image_name% /bin/bash
+ %target_path%/erl -proto_dist eid_tcp -name asd134fczcv@192.168.4.231 -setcookie taotaotheripper
+```
+>PS: `asd134fczcv` is the container ID, `192.168.4.231` is the IP of the host.
 
-
+#### Erlang-In-Docker Configuration
+As is mentioned before, when starting Erlang node, you can use `kernel` envrionment value `docker_daemon_port` to specify the docker HTTP port Erlang-In-Docker will request, `erlang_port` to specify the port Erlang node will use in docker. For example:
+```Bash
+ # DOCKER_OPTS="-H tcp://0.0.0.0:4321
+ sudo docker run -i -t -p 1234 %image_name% /bin/bash
+ %target_path%/erl -proto_dist eid_tcp -name asd134fczcv@192.168.4.231 -setcookie taotaotheripper -kernel docker_daemon_port 4321 erlang_port 1234
+```
