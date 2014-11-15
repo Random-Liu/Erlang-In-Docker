@@ -1,8 +1,6 @@
 #!/usr/bin/env escript
 %% -*- erlang -*-
 
-main([]) ->
-	main(["."]);
 main([Arg1]) when is_list(Arg1) ->
 	try
 		Path = Arg1 ++ "/",
@@ -30,5 +28,5 @@ set_cwd(Path) ->
 	file:set_cwd(Path).
 
 usage() ->
-	io:format("[USAGE] build [path]~n"),
+	io:format("[USAGE] build path~n"),
 	halt(1).
