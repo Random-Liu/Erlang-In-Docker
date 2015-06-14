@@ -28,7 +28,7 @@ In this project, we implement a new connection protocol module `eid_tcp_dist.erl
 We mainly did the following modifications on the connection protocol:<br />
   * Limit that each docker can only hold one Erlang node.<br />
   * Rule that the Erlang node name should be `DockerContainerID@HostIP`.<br />
-  * Fix the port used by Erlang. (Default 4243)<br />
+  * Fix the port used by Erlang. (Default 12345)<br />
   * Use Docker Remote API to get the published port of Erlang node.<br />
 
 Install
@@ -54,7 +54,7 @@ After the installation, a complete Erlang environment with `eid` started automat
 2. When starting docker, you should add argument `-p 12345` to export and publish the port used by Erlang node.<br />
 3. When starting Erlang node, you should add argument `-proto_dist eid_tcp` to enable `eid_tcp_dist` instead of `inet_tcp_dist`.
 
->PS: `12345` is the default port used by Erlang node. It can also be set to some other value suche as `1234`, but eid should be configured the same erlang port value by adding `-kernel erlang_port 1234` when starting Erlang VM.
+>PS: `12345` is the default port used by Erlang node. It can also be set to some other value such as `1234`, but eid should be configured the same erlang port value by adding `-kernel erlang_port 1234` when starting Erlang VM.
 
 For example, the command should be like this:
 ```Bash
